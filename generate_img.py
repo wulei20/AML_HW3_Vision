@@ -46,8 +46,12 @@ def main():
     args = parser.parse_args()
     while True:
         prompt = input("Please input prompt for generation:")
+        if "change lora model" in prompt.lower():
+            args.lora_model_path = input("Please input new lora model path:")
+            continue
         if args.lora:
-            output_path = os.path.join(args.output_dir, os.path.basename(args.lora_model_path),
+            output_path = os.path.join(args.output_dir, "" if "checkpoint-" not in args.lora_model_path else os.path.basename(os.path.dirname(args.lora_model_path)),
+                                       os.path.basename(args.lora_model_path),
                     f"{prompt}_s{args.seed}.png" if args.seed else f"{prompt}_g{args.guidance_scale}.png" if args.guidance_scale else f"{prompt}.png")
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
             print(f"Saving img with prompt '{prompt}' to path: {output_path}")
