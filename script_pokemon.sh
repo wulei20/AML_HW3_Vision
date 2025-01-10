@@ -1,21 +1,23 @@
-git clone https://github.com/huggingface/diffusers
-cd diffusers
-pip install .
+# git clone https://github.com/huggingface/diffusers
+# cd diffusers
+# pip install .
 
-cd examples
-pip install -r requirements.txt
-accelerate config
+# cd examples
+# pip install -r requirements.txt
+# cd ../..
+# accelerate config
 
-huggingface-cli login
+# huggingface-cli login
 
 export MODEL_NAME="runwayml/stable-diffusion-v1-5"
-export OUTPUT_DIR="/sddata/finetune/lora/pokemon"
+export OUTPUT_DIR="finetune/lora/pokemon"
 export HUB_MODEL_ID="pokemon-lora"
-export DATASET_NAME="lambdalabs/pokemon-blip-captions"
+export TRAIN_DATA_DIR="dataset/pokemon-blip-captions"
 
 accelerate launch --mixed_precision="fp16"  train_text_to_image_lora.py \
   --pretrained_model_name_or_path=$MODEL_NAME \
-  --dataset_name=$DATASET_NAME \
+  --mixed_precision="fp16" \
+  --train_data_dir=$TRAIN_DATA_DIR \
   --dataloader_num_workers=8 \
   --resolution=512 --center_crop --random_flip \
   --train_batch_size=1 \
